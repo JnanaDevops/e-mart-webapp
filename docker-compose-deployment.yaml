@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api:
+    image: yourdockerhub/e-kart-api:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASS=yourpassword
+    depends_on:
+      - mysql
+
+  webapi:
+    image: yourdockerhub/e-kart-webapi:latest
+    ports:
+      - "8081:8081"
+    depends_on:
+      - api
+
+  client:
+    image: yourdockerhub/e-kart-client:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - webapi
+
+  mysql:
+    image: mysql:8.0.33
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: yourpassword
+      MYSQL_DATABASE: emartdb
+    ports:
+      - "3306:3306"
+
+  mongo:
+    image: mongo:4
+    ports:
+      - "27017:27017"
+
